@@ -30,15 +30,17 @@ func execCommand(input_arr []string) error {
 	return err
 }
 
-func parseEnv(input string) string {
-	if strings.HasPrefix(input, "$") {
-		input = os.ExpandEnv(input)
+func parseEnv(input_arr []string) []string {
+	for s := range input_arr {
+		if strings.HasPrefix(input_arr[s], "$") {
+			input_arr[s] = os.ExpandEnv(input_arr[s])
+		}
 	}
-	return input
+	return input_arr
 }
 
 func inputHandler(input string) (string, error) {
-	input_arr := strings.Split(input, " ")
+	input_arr := parseEnv(strings.Split(input, " "))
 	switch input_arr[0] {
 
 	case "cd":
@@ -53,9 +55,6 @@ func inputHandler(input string) (string, error) {
 	case "echo":
 		if len(input_arr) == 0 {
 			return "", nil
-		}
-		for s := range input_arr {
-			input_arr[s] = parseEnv(input_arr[s])
 		}
 		return strings.Join(input_arr[1:], " "), nil
 	// simple ReadDir
