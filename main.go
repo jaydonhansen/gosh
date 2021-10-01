@@ -13,6 +13,9 @@ import (
 
 func execCommand(inputArr []string) error {
 	bin := inputArr[0]
+	if bin == "vi" || bin == "vim" {
+		bin = "nvim"
+	}
 	path, err := exec.LookPath(bin)
 	if err != nil {
 		return err
@@ -79,10 +82,11 @@ func main() {
 	os.Setenv("SHELL", "goshell")
 	reader := bufio.NewReader(os.Stdin)
 	cyan := color.New(color.Bold, color.FgCyan).SprintFunc()
+	green := color.New(color.Bold, color.FgGreen).SprintFunc()
 	for {
 		// Imitate your favourite oh-my-zsh functionality with this one simple trick!
 		dir, _ := os.Getwd()
-		fmt.Printf("%s \n> ", cyan(dir))
+		fmt.Printf("%s \n%s ", cyan(dir), green("gs>"))
 		text, _ := reader.ReadString('\n')
 		text = strings.Replace(text, "\n", "", -1)
 		if text == "exit" || text == "quit" {
