@@ -11,17 +11,17 @@ import (
 	"github.com/fatih/color"
 )
 
-func execCommand(input_arr []string) error {
-	bin := input_arr[0]
+func execCommand(inputArr []string) error {
+	bin := inputArr[0]
 	path, err := exec.LookPath(bin)
 	if err != nil {
 		return err
 	}
 	var cmd *exec.Cmd
-	if len(input_arr) == 0 {
+	if len(inputArr) == 0 {
 		cmd = exec.Command(path)
 	} else {
-		rest := input_arr[1:]
+		rest := inputArr[1:]
 		cmd = exec.Command(path, rest...)
 	}
 	cmd.Stdout = os.Stdout
@@ -30,21 +30,21 @@ func execCommand(input_arr []string) error {
 	return err
 }
 
-func parseEnv(input_arr []string) []string {
-	for s := range input_arr {
-		if strings.HasPrefix(input_arr[s], "$") {
-			input_arr[s] = os.ExpandEnv(input_arr[s])
+func parseEnv(inputArr []string) []string {
+	for s := range inputArr {
+		if strings.HasPrefix(inputArr[s], "$") {
+			inputArr[s] = os.ExpandEnv(inputArr[s])
 		}
 	}
-	return input_arr
+	return inputArr
 }
 
 func inputHandler(input string) (string, error) {
-	input_arr := parseEnv(strings.Split(input, " "))
-	switch input_arr[0] {
+	inputArr := parseEnv(strings.Split(input, " "))
+	switch inputArr[0] {
 
 	case "cd":
-		err := os.Chdir(input_arr[1])
+		err := os.Chdir(inputArr[1])
 		if err != nil {
 			return "", err
 		}
@@ -53,10 +53,10 @@ func inputHandler(input string) (string, error) {
 	case "clear":
 		return "\033[H\033[2J", nil
 	case "echo":
-		if len(input_arr) == 0 {
+		if len(inputArr) == 0 {
 			return "", nil
 		}
-		return strings.Join(input_arr[1:], " "), nil
+		return strings.Join(inputArr[1:], " "), nil
 	// simple ReadDir
 	case "ls":
 		files, err := ioutil.ReadDir("./")
@@ -69,7 +69,7 @@ func inputHandler(input string) (string, error) {
 		}
 		return ret, nil
 	default:
-		err := execCommand(input_arr)
+		err := execCommand(inputArr)
 		return "", err
 	}
 }
