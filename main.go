@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/user"
+	"path/filepath"
 	"strings"
 
 	"github.com/fatih/color"
@@ -42,12 +44,25 @@ func parseEnv(inputArr []string) []string {
 	return inputArr
 }
 
-func inputHandler(input string) (string, error) {
+func inputHandler(usr *user.User, input string) (string, error) {
 	inputArr := parseEnv(strings.Split(input, " "))
 	switch inputArr[0] {
 
 	case "cd":
-		err := os.Chdir(inputArr[1])
+		if len(inputArr) == 1 {
+			return "", nil
+		}
+		path := inputArr[1]
+		dir := usr.HomeDir
+		var err error
+		if path == "~" {
+			err = os.Chdir(dir)
+		} else if strings.HasPrefix(path, "~/") {
+			path = filepath.Join(dir, path[2:])
+			err = os.Chdir(path)
+		} else {
+			os.Chdir(path)
+		}
 		if err != nil {
 			return "", err
 		}
@@ -83,19 +98,21 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	cyan := color.New(color.Bold, color.FgCyan).SprintFunc()
 	green := color.New(color.Bold, color.FgGreen).SprintFunc()
+	usr, _ := user.Current()
 	for {
 		// Imitate your favourite oh-my-zsh functionality with this one simple trick!
 		dir, _ := os.Getwd()
+		dir = strings.ReplaceAll(dir, usr.HomeDir, "~")
 		fmt.Printf("%s \n%s ", cyan(dir), green("gs>"))
 		text, _ := reader.ReadString('\n')
 		text = strings.Replace(text, "\n", "", -1)
 		if text == "exit" || text == "quit" {
 			return
 		}
-		res, err := inputHandler(text)
+		res, err := inputHandler(usr, text)
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(res + "\n")
+		fmt.Println(res)
 	}
 }
