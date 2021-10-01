@@ -4,7 +4,13 @@
 
 Simple shell imitation in Golang to learn the intricacies of the language.
 
-Commands implemented:
+## Building
+`go build -v ./...`
+
+## Usage
+`./goshell`
+
+### Commands implemented
 - cd
 - clear
 - echo
