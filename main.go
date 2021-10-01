@@ -5,14 +5,34 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/fatih/color"
 )
 
+func execCommand(input_arr []string) error {
+	bin := input_arr[0]
+	path, err := exec.LookPath(bin)
+	if err != nil {
+		fmt.Printf("gosh: command not found: %s", bin)
+	}
+	var cmd *exec.Cmd
+	if len(input_arr) == 0 {
+		cmd = exec.Command(path)
+	} else {
+		rest := input_arr[1:]
+		cmd = exec.Command(path, rest...)
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	return err
+}
+
 func parseEnv(input string) string {
 	if strings.HasPrefix(input, "$") {
-		input = os.Getenv(strings.TrimPrefix(input, "$"))
+		input = os.ExpandEnv(input)
 	}
 	return input
 }
@@ -43,7 +63,8 @@ func inputHandler(input string) (string, error) {
 		}
 		return ret, nil
 	default:
-		return "", fmt.Errorf("gosh: command not found: %s", input)
+		err := execCommand(input_arr)
+		return "", err
 	}
 }
 
@@ -51,6 +72,7 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	cyan := color.New(color.Bold, color.FgCyan).SprintFunc()
 	for {
+		// Imitate your favourite oh-my-zsh functionality with this one simple trick!
 		dir, _ := os.Getwd()
 		fmt.Printf("%s \n> ", cyan(dir))
 		text, _ := reader.ReadString('\n')
