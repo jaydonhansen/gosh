@@ -44,10 +44,24 @@ func parseEnv(inputArr []string) []string {
 	return inputArr
 }
 
+// Beautiful filename detector
+func isBeautiful(name string) bool {
+	return strings.HasSuffix(name, ".go") ||
+		name == "go.mod" || name == "go.sum"
+}
+
 func inputHandler(usr *user.User, input string) (string, error) {
 	inputArr := parseEnv(strings.Split(input, " "))
 	switch inputArr[0] {
-
+	case "beautiful":
+		if len(inputArr) == 1 {
+			return "You are beautiful!", nil
+		}
+		name := filepath.Ext(input)
+		if isBeautiful(name) {
+			return "That file is beautiful!\n", nil
+		}
+		return "That file is not very beautiful...\n", nil
 	case "cd":
 		if len(inputArr) == 1 {
 			return "", nil
@@ -87,16 +101,15 @@ func inputHandler(usr *user.User, input string) (string, error) {
 		var ret string
 		for _, f := range files {
 			name := f.Name()
-			// Scan for folders
+			// Check if  the file is a directory
 			if f.IsDir() {
 				ret += fmt.Sprintf("%s\n", blue(name))
-				// Scan for any beautiful files
-			} else if strings.HasSuffix(name, ".go") ||
-				name == "go.mod" || name == "go.sum" {
+				// Check if the file is beautiful
+			} else if isBeautiful(name) {
 				ret += fmt.Sprintf("%s\n", cyan(name))
 			} else {
 				// Print out normal files :(
-				ret += fmt.Sprintf("%s\n", f.Name())
+				ret += fmt.Sprintf("%s\n", name)
 			}
 		}
 		return ret, nil
