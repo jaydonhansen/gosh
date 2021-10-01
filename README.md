@@ -1,3 +1,5 @@
+# Goshell
+[![Go Report Card](https://goreportcard.com/badge/github.com/jaydonhansen/goshell)](https://goreportcard.com/report/github.com/jaydonhansen/goshell)
 
 Simple shell imitation in Golang to learn the intricacies of the language.
 
