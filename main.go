@@ -77,13 +77,27 @@ func inputHandler(usr *user.User, input string) (string, error) {
 		return strings.Join(inputArr[1:], " "), nil
 	// simple ReadDir
 	case "ls":
+		// A beautiful colour for beautiful files
+		cyan := color.New(color.Bold, color.FgCyan).SprintFunc()
+		blue := color.New(color.Bold, color.FgBlue).SprintFunc()
 		files, err := ioutil.ReadDir("./")
 		if err != nil {
-			return "", fmt.Errorf("something strange happened")
+			return "", err
 		}
 		var ret string
 		for _, f := range files {
-			ret += fmt.Sprintf("%s\n", f.Name())
+			name := f.Name()
+			// Scan for folders
+			if f.IsDir() {
+				ret += fmt.Sprintf("%s\n", blue(name))
+				// Scan for any beautiful files
+			} else if strings.HasSuffix(name, ".go") ||
+				name == "go.mod" || name == "go.sum" {
+				ret += fmt.Sprintf("%s\n", cyan(name))
+			} else {
+				// Print out normal files :(
+				ret += fmt.Sprintf("%s\n", f.Name())
+			}
 		}
 		return ret, nil
 	default:
