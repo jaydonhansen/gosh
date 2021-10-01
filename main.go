@@ -44,10 +44,9 @@ func parseEnv(inputArr []string) []string {
 	return inputArr
 }
 
-// Beautiful filename detector
+// Beautiful file ext detector
 func isBeautiful(name string) bool {
-	return strings.HasSuffix(name, ".go") ||
-		name == "go.mod" || name == "go.sum"
+	return strings.HasSuffix(name, ".go")
 }
 
 func inputHandler(usr *user.User, input string) (string, error) {
@@ -57,8 +56,8 @@ func inputHandler(usr *user.User, input string) (string, error) {
 		if len(inputArr) == 1 {
 			return "You are beautiful!\n", nil
 		}
-		name := filepath.Ext(input)
-		if isBeautiful(name) {
+		ext := filepath.Ext(input)
+		if isBeautiful(ext) {
 			return "That file is beautiful!\n", nil
 		}
 		return "That file is not very beautiful...\n", nil
