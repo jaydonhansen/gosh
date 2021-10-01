@@ -55,7 +55,7 @@ func inputHandler(usr *user.User, input string) (string, error) {
 	switch inputArr[0] {
 	case "beautiful":
 		if len(inputArr) == 1 {
-			return "You are beautiful!", nil
+			return "You are beautiful!\n", nil
 		}
 		name := filepath.Ext(input)
 		if isBeautiful(name) {
