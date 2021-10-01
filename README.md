@@ -8,5 +8,5 @@ Commands implemented:
 - exit
 - ls
 
-There is basic support for running regular shell commands. Do not use vim,
+There is basic support for running regular shell commands. Do not try to run vim,
 it will kill your terminal in amazing ways.
