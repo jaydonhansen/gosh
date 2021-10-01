@@ -15,7 +15,7 @@ func execCommand(input_arr []string) error {
 	bin := input_arr[0]
 	path, err := exec.LookPath(bin)
 	if err != nil {
-		fmt.Printf("gosh: command not found: %s", bin)
+		return err
 	}
 	var cmd *exec.Cmd
 	if len(input_arr) == 0 {
@@ -40,6 +40,13 @@ func parseEnv(input string) string {
 func inputHandler(input string) (string, error) {
 	input_arr := strings.Split(input, " ")
 	switch input_arr[0] {
+
+	case "cd":
+		err := os.Chdir(input_arr[1])
+		if err != nil {
+			return "", err
+		}
+		return "", nil
 	// Nothing to see here, carry on
 	case "clear":
 		return "\033[H\033[2J", nil
