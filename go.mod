@@ -1,4 +1,4 @@
-module github.com/jaydonhansen/goshell
+module github.com/jaydonhansen/gosh
 
 go 1.17
 

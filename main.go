@@ -119,8 +119,8 @@ func inputHandler(usr *user.User, input string) (string, error) {
 }
 
 func main() {
-	// Because we're using goshell
-	os.Setenv("SHELL", "goshell")
+	// Because we're using gosh
+	os.Setenv("SHELL", "gosh")
 	reader := bufio.NewReader(os.Stdin)
 	cyan := color.New(color.Bold, color.FgCyan).SprintFunc()
 	green := color.New(color.Bold, color.FgGreen).SprintFunc()
