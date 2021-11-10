@@ -8,7 +8,7 @@ Simple shell imitation in Golang to learn the intricacies of the language.
 `go build -v ./...`
 
 ## Usage
-`./goshell`
+`./gosh`
 
 ### Commands implemented
 - beautiful
