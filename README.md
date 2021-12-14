@@ -19,5 +19,4 @@ Simple shell imitation in Golang to learn the intricacies of the language.
 - ls
 
 
-There is basic support for running regular shell commands. Do not try to run regular vim,
-it will kill your terminal in amazing ways. Neovim is fine.
+There is basic support for running regular shell commands.
