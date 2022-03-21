@@ -44,7 +44,6 @@ func parseEnv(inputArr []string) []string {
 	return inputArr
 }
 
-// Beautiful file ext detector
 func isBeautiful(name string) bool {
 	return strings.HasSuffix(name, ".go")
 }
